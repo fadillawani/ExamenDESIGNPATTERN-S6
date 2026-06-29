@@ -15,4 +15,5 @@ public interface FactureRepository extends JpaRepository<Facture, Long> {
         String serviceName,
         BigDecimal amount
 );
+List<Facture> findByReferenceInAndPaidFalse(List<String> references);
 }

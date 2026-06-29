@@ -6,8 +6,10 @@ import java.math.BigDecimal;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-
+import com.exam.badwallet_api.DTO.PaySpecificFacturesProxyRequest;
 import com.exam.badwallet_api.DTO.PayCurrentFactureProxyRequest;
+import java.util.List;
+
 
 @Component
 @RequiredArgsConstructor
@@ -24,5 +26,13 @@ public class PaymentServiceProxy {
             new PayCurrentFactureProxyRequest(walletCode, serviceName, amount);
 
     return restTemplate.postForObject(url, request, Object.class);
-}
+    }
+    public Object paySpecificFactures(List<String> factureReferences) {
+        String url = PAYMENT_SERVICE_URL + "/pay-specific";
+
+        PaySpecificFacturesProxyRequest request =
+                new PaySpecificFacturesProxyRequest(factureReferences);
+
+        return restTemplate.postForObject(url, request, Object.class);
+    }
 }

@@ -1,5 +1,6 @@
 package com.exam.payment_service.Service;
 import com.exam.payment_service.DTO.PayCurrentFactureRequest;
+import com.exam.payment_service.DTO.PayFacturesRequest;
 import com.exam.payment_service.Data.Facture;
 import com.exam.payment_service.Repository.FactureRepository;
 
@@ -31,4 +32,18 @@ public class FactureService {
 
     return factureRepository.save(facture);
 }
+    public List<Facture> paySpecificFactures(PayFacturesRequest request) {
+        List<Facture> factures = factureRepository
+                .findByReferenceInAndPaidFalse(request.factureReferences());
+
+        if (factures.isEmpty()) {
+            throw new RuntimeException("Aucune facture impayée trouvée");
+        }
+
+        for (Facture facture : factures) {
+            facture.setPaid(true);
+        }
+
+        return factureRepository.saveAll(factures);
+    }
 }

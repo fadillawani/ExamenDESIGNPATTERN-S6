@@ -2,6 +2,7 @@ package com.exam.badwallet_api.Service;
 
 import com.exam.badwallet_api.DTO.CreateWalletRequest;
 import com.exam.badwallet_api.DTO.DepositRequest;
+import com.exam.badwallet_api.DTO.PayFacturesRequest;
 import com.exam.badwallet_api.DTO.PayRequest;
 import com.exam.badwallet_api.DTO.TransferRequest;
 import com.exam.badwallet_api.DTO.WalletBalanceResponse;
@@ -21,4 +22,5 @@ public interface WalletService {
      WalletResponse withdraw(WithdrawRequest request);
      String transfer(TransferRequest request);
      String payCurrentFacture(PayRequest request);
+     Object paySpecificFactures(PayFacturesRequest request);
 }

@@ -3,6 +3,7 @@ package com.exam.badwallet_api.Service;
 
 import com.exam.badwallet_api.DTO.CreateWalletRequest;
 import com.exam.badwallet_api.DTO.DepositRequest;
+import com.exam.badwallet_api.DTO.PayFacturesRequest;
 import com.exam.badwallet_api.DTO.PayRequest;
 import com.exam.badwallet_api.DTO.TransferRequest;
 import com.exam.badwallet_api.DTO.WalletBalanceResponse;
@@ -281,4 +282,33 @@ public class WalletServiceImpl implements WalletService {
 
         return "Paiement effectué avec succès. Facture payée : " + facturePayee;
     }
+
+    @Override
+public Object paySpecificFactures(PayFacturesRequest request) {
+    Wallet wallet = walletRepository.findByPhoneNumber(request.phoneNumber())
+            .orElseThrow(() -> new RuntimeException("Portefeuille introuvable"));
+
+    Object paymentResponse = paymentServiceProxy.paySpecificFactures(request.factureReferences());
+
+    BigDecimal total = BigDecimal.valueOf(request.factureReferences().size() * 5000L);
+
+    if (wallet.getBalance().compareTo(total) < 0) {
+        throw new RuntimeException("Solde insuffisant");
+    }
+
+    wallet.setBalance(wallet.getBalance().subtract(total));
+    walletRepository.save(wallet);
+
+    WalletTransaction transaction = WalletTransaction.builder()
+            .wallet(wallet)
+            .type("SPECIFIC_FACTURES_PAYMENT")
+            .amount(total)
+            .fees(BigDecimal.ZERO)
+            .createdAt(LocalDateTime.now())
+            .build();
+
+    transactionRepository.save(transaction);
+
+    return paymentResponse;
+}
 }
