@@ -4,6 +4,7 @@ import com.exam.badwallet_api.DTO.CreateWalletRequest;
 import com.exam.badwallet_api.DTO.DepositRequest;
 import com.exam.badwallet_api.DTO.WalletBalanceResponse;
 import com.exam.badwallet_api.DTO.WalletResponse;
+import com.exam.badwallet_api.DTO.WithdrawRequest;
 import com.exam.badwallet_api.Data.Wallet;
 import org.springframework.data.domain.Page;
 
@@ -15,4 +16,5 @@ public interface WalletService {
      WalletResponse getWalletByPhoneNumber(String phoneNumber);
      WalletBalanceResponse getWalletBalance(String phoneNumber);
      WalletResponse deposit(Long walletId, DepositRequest request);
+     WalletResponse withdraw(WithdrawRequest request);
 }

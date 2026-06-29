@@ -5,6 +5,7 @@ import com.exam.badwallet_api.DTO.CreateWalletRequest;
 import com.exam.badwallet_api.DTO.DepositRequest;
 import com.exam.badwallet_api.DTO.WalletBalanceResponse;
 import com.exam.badwallet_api.DTO.WalletResponse;
+import com.exam.badwallet_api.DTO.WithdrawRequest;
 import com.exam.badwallet_api.Data.Wallet;
 import com.exam.badwallet_api.Data.WalletTransaction;
 import com.exam.badwallet_api.Factory.DepositStrategyFactory;
@@ -146,6 +147,48 @@ public class WalletServiceImpl implements WalletService {
                 .type("DEPOSIT_" + request.paymentMethod())
                 .amount(request.amount())
                 .fees(BigDecimal.ZERO)
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        transactionRepository.save(transaction);
+
+        return new WalletResponse(
+                savedWallet.getId(),
+                savedWallet.getPhoneNumber(),
+                savedWallet.getEmail(),
+                savedWallet.getBalance(),
+                savedWallet.getCode(),
+                savedWallet.getCurrency()
+        );
+    }
+    @Override
+    public WalletResponse withdraw(WithdrawRequest request) {
+        Wallet wallet = walletRepository.findByPhoneNumber(request.phoneNumber())
+                .orElseThrow(() -> new RuntimeException("Portefeuille introuvable"));
+
+        BigDecimal amount = request.amount();
+
+        BigDecimal fees = amount.multiply(BigDecimal.valueOf(0.01));
+
+        if (fees.compareTo(BigDecimal.valueOf(5000)) > 0) {
+            fees = BigDecimal.valueOf(5000);
+        }
+
+        BigDecimal totalToDebit = amount.add(fees);
+
+        if (wallet.getBalance().compareTo(totalToDebit) < 0) {
+            throw new RuntimeException("Solde insuffisant");
+        }
+
+        wallet.setBalance(wallet.getBalance().subtract(totalToDebit));
+
+        Wallet savedWallet = walletRepository.save(wallet);
+
+        WalletTransaction transaction = WalletTransaction.builder()
+                .wallet(savedWallet)
+                .type("WITHDRAW")
+                .amount(amount)
+                .fees(fees)
                 .createdAt(LocalDateTime.now())
                 .build();
 

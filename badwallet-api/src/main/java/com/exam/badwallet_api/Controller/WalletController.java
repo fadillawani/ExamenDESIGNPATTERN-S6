@@ -5,6 +5,7 @@ import com.exam.badwallet_api.DTO.CreateWalletRequest;
 import com.exam.badwallet_api.DTO.DepositRequest;
 import com.exam.badwallet_api.DTO.WalletBalanceResponse;
 import com.exam.badwallet_api.DTO.WalletResponse;
+import com.exam.badwallet_api.DTO.WithdrawRequest;
 import com.exam.badwallet_api.Data.Wallet;
 import com.exam.badwallet_api.Service.WalletService;
 
@@ -61,5 +62,11 @@ public class WalletController {
             @Valid @RequestBody DepositRequest request
     ) {
         return ResponseEntity.ok(walletService.deposit(id, request));
+    }
+    @PostMapping("/withdraw")
+    public ResponseEntity<WalletResponse> withdraw(
+            @Valid @RequestBody WithdrawRequest request
+    ) {
+        return ResponseEntity.ok(walletService.withdraw(request));
     }
 }
