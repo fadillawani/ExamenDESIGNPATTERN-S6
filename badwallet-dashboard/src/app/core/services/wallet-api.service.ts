@@ -23,6 +23,12 @@ export interface WithdrawRequest {
   amount: number;
 }
 
+export interface TransferRequest {
+  senderPhone: string;
+  receiverPhone: string;
+  amount: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -64,5 +70,15 @@ export class WalletApiService {
   getBalance(phone: string): Observable<BalanceResponse> {
   const encodedPhone = encodeURIComponent(phone);
   return this.http.get<BalanceResponse>(`${this.BASE_URL}/${encodedPhone}/balance`);
+  
 }
+transfer(payload: TransferRequest): Observable<string> {
+  return this.http.post(
+    `${this.BASE_URL}/transfer`,
+    payload,
+    { responseType: 'text' }
+  );
+}
+
+
 }
