@@ -3,6 +3,7 @@ package com.exam.badwallet_api.Controller;
 
 import com.exam.badwallet_api.DTO.CreateWalletRequest;
 import com.exam.badwallet_api.DTO.DepositRequest;
+import com.exam.badwallet_api.DTO.PayRequest;
 import com.exam.badwallet_api.DTO.TransferRequest;
 import com.exam.badwallet_api.DTO.WalletBalanceResponse;
 import com.exam.badwallet_api.DTO.WalletResponse;
@@ -75,5 +76,11 @@ public class WalletController {
             @Valid @RequestBody TransferRequest request
     ) {
         return ResponseEntity.ok(walletService.transfer(request));
+    }
+    @PostMapping("/pay")
+    public ResponseEntity<String> payCurrentFacture(
+            @Valid @RequestBody PayRequest request
+    ) {
+        return ResponseEntity.ok(walletService.payCurrentFacture(request));
     }
 }

@@ -3,6 +3,7 @@ package com.exam.badwallet_api.Service;
 
 import com.exam.badwallet_api.DTO.CreateWalletRequest;
 import com.exam.badwallet_api.DTO.DepositRequest;
+import com.exam.badwallet_api.DTO.PayRequest;
 import com.exam.badwallet_api.DTO.TransferRequest;
 import com.exam.badwallet_api.DTO.WalletBalanceResponse;
 import com.exam.badwallet_api.DTO.WalletResponse;
@@ -10,6 +11,7 @@ import com.exam.badwallet_api.DTO.WithdrawRequest;
 import com.exam.badwallet_api.Data.Wallet;
 import com.exam.badwallet_api.Data.WalletTransaction;
 import com.exam.badwallet_api.Factory.DepositStrategyFactory;
+import com.exam.badwallet_api.Proxy.PaymentServiceProxy;
 import com.exam.badwallet_api.Repository.WalletRepository;
 import com.exam.badwallet_api.Repository.WalletTransactionRepository;
 import com.exam.badwallet_api.Strategy.DepositStrategy;
@@ -32,6 +34,7 @@ public class WalletServiceImpl implements WalletService {
     private final WalletRepository walletRepository;
     private final WalletTransactionRepository transactionRepository;
     private final DepositStrategyFactory depositStrategyFactory;
+    private final PaymentServiceProxy paymentServiceProxy;
 
     @Async
     @Override
@@ -246,5 +249,36 @@ public class WalletServiceImpl implements WalletService {
         transactionRepository.save(receiverTransaction);
 
         return "Transfert effectué avec succès";
+    }
+
+    @Override
+    public String payCurrentFacture(PayRequest request) {
+        Wallet wallet = walletRepository.findByPhoneNumber(request.phoneNumber())
+                .orElseThrow(() -> new RuntimeException("Portefeuille introuvable"));
+
+        if (wallet.getBalance().compareTo(request.amount()) < 0) {
+            throw new RuntimeException("Solde insuffisant");
+        }
+
+        Object facturePayee = paymentServiceProxy.payCurrentFacture(
+        wallet.getCode(),
+        request.serviceName(),
+        request.amount()
+);
+
+        wallet.setBalance(wallet.getBalance().subtract(request.amount()));
+        walletRepository.save(wallet);
+
+        WalletTransaction transaction = WalletTransaction.builder()
+                .wallet(wallet)
+                .type("PAYMENT_" + request.serviceName())
+                .amount(request.amount())
+                .fees(BigDecimal.ZERO)
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        transactionRepository.save(transaction);
+
+        return "Paiement effectué avec succès. Facture payée : " + facturePayee;
     }
 }
