@@ -1,6 +1,7 @@
 package com.exam.badwallet_api.Service;
 
 
+import com.exam.badwallet_api.DTO.CreateWalletRequest;
 import com.exam.badwallet_api.Data.Wallet;
 import com.exam.badwallet_api.Data.WalletTransaction;
 import com.exam.badwallet_api.Repository.WalletRepository;
@@ -52,5 +53,27 @@ public void seedWallets(int numWallets, int eventsPerWallet) {
             }
         }
     }
+}
+
+
+@Override
+public Wallet createWallet(CreateWalletRequest request) {
+    if (walletRepository.existsByPhoneNumber(request.phoneNumber())) {
+        throw new RuntimeException("Ce numéro possède déjà un portefeuille");
+    }
+
+    if (walletRepository.existsByCode(request.code())) {
+        throw new RuntimeException("Ce code wallet existe déjà");
+    }
+
+    Wallet wallet = Wallet.builder()
+            .phoneNumber(request.phoneNumber())
+            .email(request.email())
+            .balance(request.initialBalance())
+            .code(request.code())
+            .currency(request.currency())
+            .build();
+
+    return walletRepository.save(wallet);
 }
 }
