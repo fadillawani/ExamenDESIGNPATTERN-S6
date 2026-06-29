@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { BalanceResponse } from '../models/balance.model';
 
 import { PageResponse, Wallet } from '../models/wallet.model';
 
@@ -60,4 +61,8 @@ export class WalletApiService {
       payload
     );
   }
+  getBalance(phone: string): Observable<BalanceResponse> {
+  const encodedPhone = encodeURIComponent(phone);
+  return this.http.get<BalanceResponse>(`${this.BASE_URL}/${encodedPhone}/balance`);
+}
 }

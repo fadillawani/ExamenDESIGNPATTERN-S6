@@ -13,5 +13,8 @@
     <a routerLink="/bills" routerLinkActive="active">Factures</a>
     <a routerLink="/transactions" routerLinkActive="active">Historique</a>
     <a routerLink="/admin/wallets" routerLinkActive="active">Agent</a>
+    <div class="balance-chip" *ngIf="balanceStore.balance() !== null">
+  {{ balanceStore.balance()! | xof }}
+</div>
   </nav>
 </header>

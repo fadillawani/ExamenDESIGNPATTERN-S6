@@ -1,1 +1,63 @@
-<p>dashboard works!</p>
+<section class="dashboard">
+  <div class="hero-card">
+    <div>
+      <h2>Tableau de bord client</h2>
+      <p>Saisissez votre numéro pour consulter votre portefeuille</p>
+    </div>
+  </div>
+
+  <form class="search-card" [formGroup]="balanceForm" (ngSubmit)="searchBalance()">
+    <input
+      type="text"
+      formControlName="phoneNumber"
+      placeholder="+221770000003"
+    >
+
+    <button type="submit" [disabled]="loading">
+      Consulter
+    </button>
+  </form>
+
+  <div *ngIf="errorMessage" class="error">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="balanceStore.balance() !== null" class="balance-card">
+    <p>Wallet actif</p>
+    <h3>{{ balanceStore.phoneNumber()! | phoneFormat }}</h3>
+
+    <span>Solde actuel</span>
+    <strong>{{ balanceStore.balance()! | xof }}</strong>
+  </div>
+
+  <div class="stats-grid" *ngIf="balanceStore.balance() !== null">
+    <div class="stat-card income">
+      <span>Revenus</span>
+      <strong>+75 000 XOF</strong>
+      <p>Dépôts et transferts reçus</p>
+    </div>
+
+    <div class="stat-card expense">
+      <span>Dépenses</span>
+      <strong>-25 000 XOF</strong>
+      <p>Retraits, transferts et factures</p>
+    </div>
+
+    <div class="stat-card">
+      <span>Opérations</span>
+      <strong>12</strong>
+      <p>Mouvements récents</p>
+    </div>
+  </div>
+  <div class="charts-grid" *ngIf="balanceStore.balance() !== null">
+  <div class="chart-card">
+    <h3>Répartition des revenus</h3>
+    <canvas id="incomeChart"></canvas>
+  </div>
+
+  <div class="chart-card">
+    <h3>Répartition des dépenses</h3>
+    <canvas id="expenseChart"></canvas>
+  </div>
+</div>
+</section>
