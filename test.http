@@ -1,0 +1,6 @@
+
+@walletHost = http://localhost:8080
+@paymentHost = http://localhost:8081
+
+POST {{walletHost}}/api/wallets/seed?numWallets=10&eventsPerWallet=100
+Content-Type: application/json
