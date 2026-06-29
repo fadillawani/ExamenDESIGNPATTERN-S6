@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { BalanceResponse } from '../models/balance.model';
-
+import { WalletTransaction } from '../models/transaction.model';
 import { PageResponse, Wallet } from '../models/wallet.model';
 
 export interface CreateWalletRequest {
@@ -86,6 +86,12 @@ transfer(payload: TransferRequest): Observable<string> {
 }
 payFactures(payload: PayFacturesRequest): Observable<object> {
   return this.http.post<object>(`${this.BASE_URL}/pay-factures`, payload);
+}
+getTransactions(phone: string): Observable<WalletTransaction[]> {
+  const encodedPhone = encodeURIComponent(phone);
+  return this.http.get<WalletTransaction[]>(
+    `${this.BASE_URL}/${encodedPhone}/transactions`
+  );
 }
 
 

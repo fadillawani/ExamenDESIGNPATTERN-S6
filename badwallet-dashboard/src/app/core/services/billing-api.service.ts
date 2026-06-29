@@ -18,9 +18,6 @@ export class BillingApiService {
       params = params.set('unite', unite);
     }
 
-    return this.http.get<Bill[]>(
-      `${this.BASE_URL}/${walletCode}/current`,
-      { params }
-    );
+    return this.http.get<Bill[]>(`${this.BASE_URL}/${walletCode}/current`, { params });
   }
-}
+} 
