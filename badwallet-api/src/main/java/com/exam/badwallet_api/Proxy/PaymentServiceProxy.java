@@ -49,4 +49,20 @@ public Object getCurrentFactures(String walletCode, String unite) {
 
     return restTemplate.getForObject(url, Object.class);
 }
+public Object getFacturesByPeriode(
+        String walletCode,
+        String debut,
+        String fin
+) {
+
+    String url =
+            PAYMENT_SERVICE_URL + "/"
+                    + walletCode
+                    + "/periode?debut="
+                    + debut
+                    + "&fin="
+                    + fin;
+
+    return restTemplate.getForObject(url, Object.class);
+}
 }

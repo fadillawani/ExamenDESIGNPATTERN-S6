@@ -8,6 +8,7 @@ import com.exam.payment_service.Repository.FactureRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -49,4 +50,15 @@ public class FactureService {
     public List<Facture> getCurrentFacturesByUnite(String walletCode, String unite) {
     return factureRepository.findByWalletCodeAndPaidFalseAndUnite(walletCode, unite);
 }
+    public List<Facture> getFacturesByPeriode(
+            String walletCode,
+            LocalDate debut,
+            LocalDate fin
+    ) {
+        return factureRepository.findByWalletCodeAndPaidFalseAndDueDateBetween(
+                walletCode,
+                debut,
+                fin
+        );
+    }
 }

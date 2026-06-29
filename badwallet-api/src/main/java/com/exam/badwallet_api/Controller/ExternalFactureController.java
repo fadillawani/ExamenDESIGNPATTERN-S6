@@ -20,4 +20,19 @@ public class ExternalFactureController {
     ) {
         return ResponseEntity.ok(paymentServiceProxy.getCurrentFactures(walletCode, unite));
     }
+    @GetMapping("/{walletCode}/periode")
+    public ResponseEntity<Object> getFacturesByPeriode(
+            @PathVariable String walletCode,
+            @RequestParam String debut,
+            @RequestParam String fin
+    ) {
+
+        return ResponseEntity.ok(
+                paymentServiceProxy.getFacturesByPeriode(
+                        walletCode,
+                        debut,
+                        fin
+                )
+        );
+    }
 }

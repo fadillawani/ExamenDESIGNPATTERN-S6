@@ -95,3 +95,6 @@ Content-Type: application/json
 GET {{walletHost}}/api/external/factures/WLT-0000003/current?unite=WOYAFAL
 Content-Type: application/json
 
+### 2.4 Consulter les factures impayées sur une période
+GET {{walletHost}}/api/external/factures/WLT-0000003/periode?debut=2026-05-01&fin=2026-07-01
+Content-Type: application/json

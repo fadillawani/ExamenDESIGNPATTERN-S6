@@ -7,6 +7,7 @@ import com.exam.payment_service.Service.FactureService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -36,5 +37,13 @@ public class FactureController {
         }
 
         return factureService.getCurrentFactures(walletCode);
+    }
+    @GetMapping("/{walletCode}/periode")
+    public List<Facture> getFacturesByPeriode(
+            @PathVariable String walletCode,
+            @RequestParam LocalDate debut,
+            @RequestParam LocalDate fin
+    ) {
+        return factureService.getFacturesByPeriode(walletCode, debut, fin);
     }
 }
