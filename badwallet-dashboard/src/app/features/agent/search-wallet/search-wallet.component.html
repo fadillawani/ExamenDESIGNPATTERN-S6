@@ -1,0 +1,35 @@
+<section class="page">
+  <div class="page-header">
+    <h2>Recherche de client</h2>
+    <p>Rechercher un portefeuille par numéro de téléphone</p>
+  </div>
+
+  <form class="search-card" [formGroup]="searchForm" (ngSubmit)="search()">
+    <input
+      type="text"
+      formControlName="phoneNumber"
+      placeholder="+221770000003"
+    >
+
+    <button type="submit" [disabled]="loading">
+      {{ loading ? 'Recherche...' : 'Rechercher' }}
+    </button>
+  </form>
+
+  <div *ngIf="errorMessage" class="error">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="wallet" class="wallet-card">
+    <h3>Portefeuille trouvé</h3>
+
+    <div class="details">
+      <p><strong>ID :</strong> {{ wallet.id }}</p>
+      <p><strong>Code :</strong> {{ wallet.code }}</p>
+      <p><strong>Téléphone :</strong> {{ wallet.phoneNumber | phoneFormat }}</p>
+      <p><strong>Email :</strong> {{ wallet.email }}</p>
+      <p><strong>Solde :</strong> {{ wallet.balance | xof }}</p>
+      <p><strong>Devise :</strong> {{ wallet.currency }}</p>
+    </div>
+  </div>
+</section>

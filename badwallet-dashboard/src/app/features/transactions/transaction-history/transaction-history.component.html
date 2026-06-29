@@ -1,0 +1,58 @@
+<section class="history-page">
+  <div class="page-header">
+    <h2>Historique des transactions</h2>
+    <p>Consulter les mouvements d’un portefeuille</p>
+  </div>
+
+  <form class="filter-card" [formGroup]="filterForm" (ngSubmit)="loadTransactions()">
+    <input
+      type="text"
+      formControlName="phoneNumber"
+      placeholder="+221770000003"
+    >
+
+    <select formControlName="type" (change)="applyFilter()">
+      <option value="">Tous les types</option>
+      <option value="DEPOSIT_CREDIT_CARD">Dépôts</option>
+      <option value="WITHDRAW">Retraits</option>
+      <option value="TRANSFER_OUT">Transferts envoyés</option>
+      <option value="TRANSFER_IN">Transferts reçus</option>
+      <option value="PAYMENT_ISM">Paiements ISM</option>
+      <option value="SPECIFIC_FACTURES_PAYMENT">Paiements factures</option>
+      <option value="SEED_EVENT">Seed events</option>
+    </select>
+
+    <button type="submit" [disabled]="loading">
+      Charger
+    </button>
+  </form>
+
+  <div *ngIf="loading" class="info">Chargement...</div>
+  <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+
+  <div class="table-card" *ngIf="filteredTransactions.length > 0">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Type</th>
+          <th>Montant</th>
+          <th>Frais</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let transaction of filteredTransactions">
+          <td>{{ transaction.id }}</td>
+          <td>
+            <span class="type-badge">{{ transaction.type }}</span>
+          </td>
+          <td class="amount">{{ transaction.amount | xof }}</td>
+          <td>{{ transaction.fees | xof }}</td>
+          <td>{{ transaction.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>

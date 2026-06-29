@@ -1,0 +1,44 @@
+<section class="page">
+  <div class="page-header">
+    <div>
+      <h2>Créer un portefeuille</h2>
+      <p>Formulaire d’inscription d’un nouveau client</p>
+    </div>
+  </div>
+
+  <form class="form-card" [formGroup]="walletForm" (ngSubmit)="submit()">
+    <div class="form-grid">
+      <label>
+        Numéro de téléphone
+        <input type="text" formControlName="phoneNumber" placeholder="+221779998877">
+      </label>
+
+      <label>
+        Email
+        <input type="email" formControlName="email" placeholder="client@gmail.com">
+      </label>
+
+      <label>
+        Solde initial
+        <input type="number" formControlName="initialBalance">
+      </label>
+
+      <label>
+        Code Wallet
+        <input type="text" formControlName="code" readonly>
+        </label>
+
+      <label>
+        Devise
+        <input type="text" formControlName="currency">
+      </label>
+    </div>
+
+    <div *ngIf="successMessage" class="success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+
+    <button type="submit" [disabled]="loading">
+      {{ loading ? 'Création...' : 'Créer le portefeuille' }}
+    </button>
+  </form>
+</section>

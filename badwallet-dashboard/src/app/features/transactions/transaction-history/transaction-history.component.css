@@ -1,0 +1,96 @@
+.history-page {
+  max-width: 1150px;
+  margin: 0 auto;
+}
+
+.page-header h2 {
+  margin: 0;
+  font-size: 30px;
+  color: #0f172a;
+}
+
+.page-header p {
+  color: #64748b;
+}
+
+.filter-card {
+  margin-top: 22px;
+  background: white;
+  padding: 20px;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(15,23,42,.08);
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 12px;
+}
+
+input,
+select {
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+}
+
+button {
+  background: #22c55e;
+  color: #0f172a;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.table-card {
+  margin-top: 22px;
+  background: white;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(15,23,42,.08);
+  overflow: hidden;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background: #f8fafc;
+  color: #475569;
+  padding: 14px;
+  text-align: left;
+}
+
+td {
+  padding: 14px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.amount {
+  font-weight: 800;
+  color: #16a34a;
+}
+
+.type-badge {
+  background: #e0f2fe;
+  color: #0369a1;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.info {
+  margin-top: 18px;
+  padding: 12px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  border-radius: 10px;
+}
+
+.error {
+  margin-top: 18px;
+  padding: 12px;
+  background: #fee2e2;
+  color: #991b1b;
+  border-radius: 10px;
+}

@@ -1,0 +1,39 @@
+<section class="transfer-page">
+  <div class="page-header">
+    <h2>Transfert d’argent</h2>
+    <p>Envoyer de l’argent vers un autre portefeuille BadWallet</p>
+  </div>
+
+  <form class="form-card" [formGroup]="transferForm" (ngSubmit)="submit()">
+    <label>
+      Numéro expéditeur
+      <input type="text" formControlName="senderPhone" placeholder="+221770000003">
+    </label>
+
+    <label>
+      Numéro destinataire
+      <input type="text" formControlName="receiverPhone" placeholder="+221770000002">
+    </label>
+
+    <label>
+      Montant
+      <input type="number" formControlName="amount" placeholder="2000">
+    </label>
+
+    <div *ngIf="transferForm.errors?.['samePhone']" class="error">
+      Le numéro destinataire doit être différent du numéro expéditeur.
+    </div>
+
+    <div *ngIf="successMessage" class="success">
+      {{ successMessage }}
+    </div>
+
+    <div *ngIf="errorMessage" class="error">
+      {{ errorMessage }}
+    </div>
+
+    <button type="submit" [disabled]="loading">
+      {{ loading ? 'Transfert en cours...' : 'Effectuer le transfert' }}
+    </button>
+  </form>
+</section>

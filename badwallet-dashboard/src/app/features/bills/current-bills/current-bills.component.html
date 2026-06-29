@@ -1,0 +1,83 @@
+<section class="bills-page">
+  <div class="page-header">
+    <h2>Factures impayées</h2>
+    <p>Consulter et payer les factures du mois courant</p>
+  </div>
+
+  <form class="filter-card" [formGroup]="searchForm" (ngSubmit)="loadBills()">
+    <input
+      type="text"
+      formControlName="walletCode"
+      placeholder="Code wallet : WLT-0000003"
+    >
+
+    <select formControlName="unite">
+      <option value="">Tous les fournisseurs</option>
+      <option value="ISM">ISM</option>
+      <option value="WOYAFAL">WOYAFAL</option>
+    </select>
+
+    <button type="submit" [disabled]="loading">
+      Charger
+    </button>
+  </form>
+
+  <div class="helper" *ngIf="searchForm.value.walletCode">
+    Téléphone utilisé pour le paiement :
+    <strong>{{ phoneFromWalletCode(searchForm.value.walletCode) }}</strong>
+  </div>
+
+  <div *ngIf="successMessage" class="success">{{ successMessage }}</div>
+  <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+  <div *ngIf="loading" class="info">Traitement en cours...</div>
+
+  <div class="table-card" *ngIf="bills.length > 0">
+    <table>
+      <thead>
+        <tr>
+          <th></th>
+          <th>Référence</th>
+          <th>Service</th>
+          <th>Unité</th>
+          <th>Montant</th>
+          <th>Échéance</th>
+          <th>Statut</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let bill of bills">
+          <td>
+            <input
+              type="checkbox"
+              [checked]="selectedReferences.has(bill.reference)"
+              (change)="toggleBill(bill.reference, $any($event.target).checked)"
+            >
+          </td>
+
+          <td>{{ bill.reference }}</td>
+          <td>{{ bill.serviceName }}</td>
+          <td>{{ bill.unite }}</td>
+          <td class="amount">{{ bill.amount | xof }}</td>
+          <td>{{ bill.dueDate }}</td>
+
+          <td>
+            <span class="status">
+              {{ bill.paid ? 'Payée' : 'Impayée' }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="actions">
+      <button
+        type="button"
+        (click)="paySelectedBills()"
+        [disabled]="loading || selectedReferences.size === 0"
+      >
+        Payer les factures sélectionnées
+      </button>
+    </div>
+  </div>
+</section>

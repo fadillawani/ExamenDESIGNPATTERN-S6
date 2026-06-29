@@ -1,0 +1,177 @@
+.dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.hero-card {
+  background: linear-gradient(135deg, #0f172a, #1e3a8a);
+  color: white;
+  padding: 32px;
+  border-radius: 20px;
+  margin-bottom: 24px;
+}
+
+.hero-card h2 {
+  margin: 0;
+  font-size: 32px;
+}
+
+.hero-card p {
+  margin-top: 10px;
+  color: #cbd5e1;
+}
+
+.search-card {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: white;
+  padding: 22px;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, .08);
+  margin-bottom: 24px;
+}
+
+.search-card input {
+  flex: 1;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  font-size: 15px;
+}
+
+.search-card button {
+  background: #22c55e;
+  color: #0f172a;
+  border: none;
+  padding: 14px 22px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.search-card button:hover {
+  background: #16a34a;
+  color: white;
+}
+
+.balance-card {
+  background: white;
+  border-radius: 18px;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(15,23,42,.08);
+  margin-bottom: 24px;
+}
+
+.balance-card p {
+  margin: 0;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.balance-card h3 {
+  margin: 10px 0;
+  color: #0f172a;
+}
+
+.balance-card span {
+  color: #64748b;
+  display: block;
+  margin-top: 20px;
+}
+
+.balance-card strong {
+  display: block;
+  font-size: 42px;
+  color: #16a34a;
+  margin-top: 10px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 20px;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 8px 24px rgba(15,23,42,.08);
+}
+
+.stat-card span {
+  color: #64748b;
+}
+
+.stat-card strong {
+  display: block;
+  margin-top: 12px;
+  font-size: 28px;
+}
+
+.stat-card p {
+  margin-top: 10px;
+  color: #94a3b8;
+}
+
+.income strong {
+  color: #16a34a;
+}
+
+.expense strong {
+  color: #dc2626;
+}
+
+.error {
+  background: #fee2e2;
+  color: #991b1b;
+  padding: 14px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+@media (max-width:900px){
+
+.search-card{
+    flex-direction:column;
+}
+
+.search-card input,
+.search-card button{
+    width:100%;
+}
+
+.stats-grid{
+    grid-template-columns:1fr;
+}
+
+.balance-card strong{
+    font-size:32px;
+}
+
+}
+.charts-grid {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.chart-card {
+  background: white;
+  padding: 24px;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(15,23,42,.08);
+}
+
+.chart-card h3 {
+  margin-top: 0;
+  color: #0f172a;
+}
+
+@media (max-width:900px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+}
