@@ -28,6 +28,11 @@ export interface TransferRequest {
   receiverPhone: string;
   amount: number;
 }
+export interface PayFacturesRequest {
+  phoneNumber: string;
+  serviceName: string;
+  factureReferences: string[];
+}
 
 @Injectable({
   providedIn: 'root'
@@ -78,6 +83,9 @@ transfer(payload: TransferRequest): Observable<string> {
     payload,
     { responseType: 'text' }
   );
+}
+payFactures(payload: PayFacturesRequest): Observable<object> {
+  return this.http.post<object>(`${this.BASE_URL}/pay-factures`, payload);
 }
 
 

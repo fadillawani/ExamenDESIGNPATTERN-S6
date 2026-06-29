@@ -4,7 +4,7 @@ import com.exam.badwallet_api.Proxy.PaymentServiceProxy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/external/factures")
 @RequiredArgsConstructor
