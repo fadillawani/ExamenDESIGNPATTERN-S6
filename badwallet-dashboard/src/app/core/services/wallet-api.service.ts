@@ -30,4 +30,8 @@ export class WalletApiService {
   createWallet(payload: CreateWalletRequest): Observable<Wallet> {
     return this.http.post<Wallet>(this.BASE_URL, payload);
   }
+  getWalletByPhone(phone: string): Observable<Wallet> {
+  const encodedPhone = encodeURIComponent(phone);
+  return this.http.get<Wallet>(`${this.BASE_URL}/${encodedPhone}`);
+}
 }

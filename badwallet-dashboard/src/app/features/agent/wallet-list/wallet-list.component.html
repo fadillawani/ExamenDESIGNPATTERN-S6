@@ -19,6 +19,22 @@
     {{ errorMessage }}
   </div>
 
+  <form class="search-card" [formGroup]="searchForm" (ngSubmit)="searchWallet()">
+  <input
+    type="text"
+    formControlName="phoneNumber"
+    placeholder="Rechercher par téléphone : +221770000003"
+  >
+
+  <button type="submit" [disabled]="loading">
+    Rechercher
+  </button>
+
+  <button type="button" class="secondary" (click)="resetSearch()">
+    Réinitialiser
+  </button>
+</form>
+
   <div class="table-card" *ngIf="!loading && !errorMessage">
     <table>
       <thead>
