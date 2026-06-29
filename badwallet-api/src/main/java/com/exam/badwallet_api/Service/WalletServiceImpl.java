@@ -3,6 +3,7 @@ package com.exam.badwallet_api.Service;
 
 import com.exam.badwallet_api.DTO.CreateWalletRequest;
 import com.exam.badwallet_api.DTO.DepositRequest;
+import com.exam.badwallet_api.DTO.TransferRequest;
 import com.exam.badwallet_api.DTO.WalletBalanceResponse;
 import com.exam.badwallet_api.DTO.WalletResponse;
 import com.exam.badwallet_api.DTO.WithdrawRequest;
@@ -202,5 +203,48 @@ public class WalletServiceImpl implements WalletService {
                 savedWallet.getCode(),
                 savedWallet.getCurrency()
         );
+    }
+    @Override
+    public String transfer(TransferRequest request) {
+        if (request.senderPhone().equals(request.receiverPhone())) {
+            throw new RuntimeException("Le portefeuille source et destination doivent être différents");
+        }
+
+        Wallet sender = walletRepository.findByPhoneNumber(request.senderPhone())
+                .orElseThrow(() -> new RuntimeException("Portefeuille émetteur introuvable"));
+
+        Wallet receiver = walletRepository.findByPhoneNumber(request.receiverPhone())
+                .orElseThrow(() -> new RuntimeException("Portefeuille récepteur introuvable"));
+
+        if (sender.getBalance().compareTo(request.amount()) < 0) {
+            throw new RuntimeException("Solde insuffisant");
+        }
+
+        sender.setBalance(sender.getBalance().subtract(request.amount()));
+        receiver.setBalance(receiver.getBalance().add(request.amount()));
+
+        walletRepository.save(sender);
+        walletRepository.save(receiver);
+
+        WalletTransaction senderTransaction = WalletTransaction.builder()
+                .wallet(sender)
+                .type("TRANSFER_OUT")
+                .amount(request.amount())
+                .fees(BigDecimal.ZERO)
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        WalletTransaction receiverTransaction = WalletTransaction.builder()
+                .wallet(receiver)
+                .type("TRANSFER_IN")
+                .amount(request.amount())
+                .fees(BigDecimal.ZERO)
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        transactionRepository.save(senderTransaction);
+        transactionRepository.save(receiverTransaction);
+
+        return "Transfert effectué avec succès";
     }
 }
