@@ -4,13 +4,15 @@ import { WalletApiService } from '../../../core/services/wallet-api.service';
 import { Wallet } from '../../../core/models/wallet.model';
 import { XofPipe } from '../../../shared/pipes/xof.pipe';
 import { PhoneFormatPipe } from '../../../shared/pipes/phone-format.pipe';
+import { RouterLink } from '@angular/router';
+
 
 @Component({
   selector: 'app-wallet-list',
   standalone: true,
-  imports: [CommonModule, XofPipe, PhoneFormatPipe],
+  imports: [CommonModule, RouterLink, XofPipe, PhoneFormatPipe],
   templateUrl: './wallet-list.component.html',
-  styleUrl: './wallet-list.component.css'
+  styleUrl: './wallet-list.component.css',
 })
 export class WalletListComponent implements OnInit {
   wallets: Wallet[] = [];

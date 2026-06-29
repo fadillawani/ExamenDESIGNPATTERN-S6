@@ -3,6 +3,14 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PageResponse, Wallet } from '../models/wallet.model';
 
+export interface CreateWalletRequest {
+  phoneNumber: string;
+  email: string;
+  initialBalance: number;
+  code: string;
+  currency: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -17,5 +25,9 @@ export class WalletApiService {
       .set('size', size);
 
     return this.http.get<PageResponse<Wallet>>(this.BASE_URL, { params });
+  }
+
+  createWallet(payload: CreateWalletRequest): Observable<Wallet> {
+    return this.http.post<Wallet>(this.BASE_URL, payload);
   }
 }

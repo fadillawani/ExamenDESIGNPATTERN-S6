@@ -96,3 +96,16 @@ button:disabled {
   padding: 14px;
   border-radius: 10px;
 }
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.create-btn {
+  background: #22c55e;
+  color: #0f172a;
+  padding: 9px 14px;
+  border-radius: 999px;
+  font-weight: 700;
+}
