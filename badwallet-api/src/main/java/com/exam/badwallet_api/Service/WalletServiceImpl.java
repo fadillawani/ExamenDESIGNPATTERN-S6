@@ -5,6 +5,7 @@ import com.exam.badwallet_api.DTO.CreateWalletRequest;
 import com.exam.badwallet_api.DTO.DepositRequest;
 import com.exam.badwallet_api.DTO.PayFacturesRequest;
 import com.exam.badwallet_api.DTO.PayRequest;
+import com.exam.badwallet_api.DTO.TransactionResponse;
 import com.exam.badwallet_api.DTO.TransferRequest;
 import com.exam.badwallet_api.DTO.WalletBalanceResponse;
 import com.exam.badwallet_api.DTO.WalletResponse;
@@ -27,6 +28,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -284,31 +286,47 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-public Object paySpecificFactures(PayFacturesRequest request) {
-    Wallet wallet = walletRepository.findByPhoneNumber(request.phoneNumber())
-            .orElseThrow(() -> new RuntimeException("Portefeuille introuvable"));
+    public Object paySpecificFactures(PayFacturesRequest request) {
+        Wallet wallet = walletRepository.findByPhoneNumber(request.phoneNumber())
+                .orElseThrow(() -> new RuntimeException("Portefeuille introuvable"));
 
-    Object paymentResponse = paymentServiceProxy.paySpecificFactures(request.factureReferences());
+        Object paymentResponse = paymentServiceProxy.paySpecificFactures(request.factureReferences());
 
-    BigDecimal total = BigDecimal.valueOf(request.factureReferences().size() * 5000L);
+        BigDecimal total = BigDecimal.valueOf(request.factureReferences().size() * 5000L);
 
-    if (wallet.getBalance().compareTo(total) < 0) {
-        throw new RuntimeException("Solde insuffisant");
+        if (wallet.getBalance().compareTo(total) < 0) {
+            throw new RuntimeException("Solde insuffisant");
+        }
+
+        wallet.setBalance(wallet.getBalance().subtract(total));
+        walletRepository.save(wallet);
+
+        WalletTransaction transaction = WalletTransaction.builder()
+                .wallet(wallet)
+                .type("SPECIFIC_FACTURES_PAYMENT")
+                .amount(total)
+                .fees(BigDecimal.ZERO)
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        transactionRepository.save(transaction);
+
+        return paymentResponse;
     }
+    @Override
+    public List<TransactionResponse> getTransactionsByPhoneNumber(String phoneNumber) {
+        Wallet wallet = walletRepository.findByPhoneNumber(phoneNumber)
+                .orElseThrow(() -> new RuntimeException("Portefeuille introuvable"));
 
-    wallet.setBalance(wallet.getBalance().subtract(total));
-    walletRepository.save(wallet);
-
-    WalletTransaction transaction = WalletTransaction.builder()
-            .wallet(wallet)
-            .type("SPECIFIC_FACTURES_PAYMENT")
-            .amount(total)
-            .fees(BigDecimal.ZERO)
-            .createdAt(LocalDateTime.now())
-            .build();
-
-    transactionRepository.save(transaction);
-
-    return paymentResponse;
-}
+        return transactionRepository.findByWalletPhoneNumberOrderByCreatedAtDesc(wallet.getPhoneNumber())
+                .stream()
+                .map(transaction -> new TransactionResponse(
+                        transaction.getId(),
+                        transaction.getType(),
+                        transaction.getAmount(),
+                        transaction.getFees(),
+                        transaction.getCreatedAt()
+                ))
+                .toList();
+    }
 }

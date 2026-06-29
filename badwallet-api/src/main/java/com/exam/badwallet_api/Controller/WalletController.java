@@ -5,6 +5,7 @@ import com.exam.badwallet_api.DTO.CreateWalletRequest;
 import com.exam.badwallet_api.DTO.DepositRequest;
 import com.exam.badwallet_api.DTO.PayFacturesRequest;
 import com.exam.badwallet_api.DTO.PayRequest;
+import com.exam.badwallet_api.DTO.TransactionResponse;
 import com.exam.badwallet_api.DTO.TransferRequest;
 import com.exam.badwallet_api.DTO.WalletBalanceResponse;
 import com.exam.badwallet_api.DTO.WalletResponse;
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/wallets")
@@ -89,5 +91,11 @@ public class WalletController {
             @Valid @RequestBody PayFacturesRequest request
     ) {
         return ResponseEntity.ok(walletService.paySpecificFactures(request));
+    }
+    @GetMapping("/{phoneNumber}/transactions")
+    public ResponseEntity<List<TransactionResponse>> getTransactionsByPhoneNumber(
+            @PathVariable String phoneNumber
+    ) {
+        return ResponseEntity.ok(walletService.getTransactionsByPhoneNumber(phoneNumber));
     }
 }
