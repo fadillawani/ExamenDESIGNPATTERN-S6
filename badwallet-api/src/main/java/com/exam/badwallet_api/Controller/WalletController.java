@@ -35,10 +35,16 @@ public class WalletController {
     }
 
     @GetMapping
-public ResponseEntity<Page<WalletResponse>> getAllWallets(
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "10") int size
-) {
-    return ResponseEntity.ok(walletService.getAllWallets(page, size));
-}
+    public ResponseEntity<Page<WalletResponse>> getAllWallets(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(walletService.getAllWallets(page, size));
+    }
+    @GetMapping("/{phoneNumber}")
+    public ResponseEntity<WalletResponse> getWalletByPhoneNumber(
+            @PathVariable String phoneNumber
+    ) {
+        return ResponseEntity.ok(walletService.getWalletByPhoneNumber(phoneNumber));
+    }
 }

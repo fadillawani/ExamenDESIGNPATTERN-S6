@@ -10,4 +10,5 @@ public interface WalletService {
     void seedWallets(int numWallets, int eventsPerWallet);
      Wallet createWallet(CreateWalletRequest request);
      Page<WalletResponse> getAllWallets(int page, int size);
+     WalletResponse getWalletByPhoneNumber(String phoneNumber);
 }

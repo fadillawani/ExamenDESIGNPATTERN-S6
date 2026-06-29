@@ -96,4 +96,18 @@ public Page<WalletResponse> getAllWallets(int page, int size) {
                     wallet.getCurrency()
             ));
 }
+@Override
+public WalletResponse getWalletByPhoneNumber(String phoneNumber) {
+    Wallet wallet = walletRepository.findByPhoneNumber(phoneNumber)
+            .orElseThrow(() -> new RuntimeException("Portefeuille introuvable"));
+
+    return new WalletResponse(
+            wallet.getId(),
+            wallet.getPhoneNumber(),
+            wallet.getEmail(),
+            wallet.getBalance(),
+            wallet.getCode(),
+            wallet.getCurrency()
+    );
+}
 }
