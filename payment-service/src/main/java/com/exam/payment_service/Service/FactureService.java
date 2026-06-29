@@ -1,0 +1,64 @@
+package com.exam.payment_service.Service;
+import com.exam.payment_service.DTO.PayCurrentFactureRequest;
+import com.exam.payment_service.DTO.PayFacturesRequest;
+import com.exam.payment_service.Data.Facture;
+import com.exam.payment_service.Repository.FactureRepository;
+
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class FactureService {
+
+    private final FactureRepository factureRepository;
+
+    public List<Facture> getCurrentFactures(String walletCode) {
+        return factureRepository.findByWalletCodeAndPaidFalse(walletCode);
+    }
+    public Facture payCurrentFacture(PayCurrentFactureRequest request) {
+    Facture facture = factureRepository
+            .findFirstByWalletCodeAndServiceNameAndAmountAndPaidFalse(
+                    request.walletCode(),
+                    request.serviceName(),
+                    request.amount()
+            )
+            .orElseThrow(() -> new RuntimeException("Facture impayée introuvable"));
+
+    facture.setPaid(true);
+
+    return factureRepository.save(facture);
+}
+    public List<Facture> paySpecificFactures(PayFacturesRequest request) {
+        List<Facture> factures = factureRepository
+                .findByReferenceInAndPaidFalse(request.factureReferences());
+
+        if (factures.isEmpty()) {
+            throw new RuntimeException("Aucune facture impayée trouvée");
+        }
+
+        for (Facture facture : factures) {
+            facture.setPaid(true);
+        }
+
+        return factureRepository.saveAll(factures);
+    }
+    public List<Facture> getCurrentFacturesByUnite(String walletCode, String unite) {
+    return factureRepository.findByWalletCodeAndPaidFalseAndUnite(walletCode, unite);
+}
+    public List<Facture> getFacturesByPeriode(
+            String walletCode,
+            LocalDate debut,
+            LocalDate fin
+    ) {
+        return factureRepository.findByWalletCodeAndPaidFalseAndDueDateBetween(
+                walletCode,
+                debut,
+                fin
+        );
+    }
+}
