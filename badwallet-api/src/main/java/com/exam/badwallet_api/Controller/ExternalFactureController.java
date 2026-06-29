@@ -12,10 +12,12 @@ public class ExternalFactureController {
 
     private final PaymentServiceProxy paymentServiceProxy;
 
+    
     @GetMapping("/{walletCode}/current")
     public ResponseEntity<Object> getCurrentFactures(
-            @PathVariable String walletCode
+            @PathVariable String walletCode,
+            @RequestParam(required = false) String unite
     ) {
-        return ResponseEntity.ok(paymentServiceProxy.getCurrentFactures(walletCode));
+        return ResponseEntity.ok(paymentServiceProxy.getCurrentFactures(walletCode, unite));
     }
 }

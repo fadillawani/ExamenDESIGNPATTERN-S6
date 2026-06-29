@@ -89,3 +89,9 @@ Content-Type: application/json
 ### 2.2 Consulter les factures impayées du mois en cours
 GET {{walletHost}}/api/external/factures/WLT-0000003/current
 Content-Type: application/json
+
+
+### 2.3 Consulter les factures impayées du mois en cours filtrées par unité de paiement (ex: WOYAFAL)
+GET {{walletHost}}/api/external/factures/WLT-0000003/current?unite=WOYAFAL
+Content-Type: application/json
+

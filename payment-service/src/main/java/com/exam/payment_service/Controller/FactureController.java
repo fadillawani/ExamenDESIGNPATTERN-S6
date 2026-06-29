@@ -16,10 +16,7 @@ public class FactureController {
 
     private final FactureService factureService;
 
-    @GetMapping("/{walletCode}/current")
-    public List<Facture> current(@PathVariable String walletCode) {
-        return factureService.getCurrentFactures(walletCode);
-    }
+    
     @PostMapping("/pay-current")
     public Facture payCurrent(@RequestBody PayCurrentFactureRequest request) {
         return factureService.payCurrentFacture(request);
@@ -27,5 +24,17 @@ public class FactureController {
     @PostMapping("/pay-specific")
     public List<Facture> paySpecific(@RequestBody PayFacturesRequest request) {
         return factureService.paySpecificFactures(request);
+    }
+    @GetMapping("/{walletCode}/current")
+    public List<Facture> current(
+            @PathVariable String walletCode,
+            @RequestParam(required = false) String unite
+    ) {
+
+        if (unite != null && !unite.isBlank()) {
+            return factureService.getCurrentFacturesByUnite(walletCode, unite);
+        }
+
+        return factureService.getCurrentFactures(walletCode);
     }
 }

@@ -46,4 +46,7 @@ public class FactureService {
 
         return factureRepository.saveAll(factures);
     }
+    public List<Facture> getCurrentFacturesByUnite(String walletCode, String unite) {
+    return factureRepository.findByWalletCodeAndPaidFalseAndUnite(walletCode, unite);
+}
 }
