@@ -2,12 +2,16 @@ package com.exam.badwallet_api.Controller;
 
 
 import com.exam.badwallet_api.DTO.CreateWalletRequest;
+import com.exam.badwallet_api.DTO.WalletResponse;
 import com.exam.badwallet_api.Data.Wallet;
 import com.exam.badwallet_api.Service.WalletService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
 
 @RestController
 @RequestMapping("/api/wallets")
@@ -29,4 +33,12 @@ public class WalletController {
     public Wallet createWallet(@Valid @RequestBody CreateWalletRequest request) {
         return walletService.createWallet(request);
     }
+
+    @GetMapping
+public ResponseEntity<Page<WalletResponse>> getAllWallets(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size
+) {
+    return ResponseEntity.ok(walletService.getAllWallets(page, size));
+}
 }

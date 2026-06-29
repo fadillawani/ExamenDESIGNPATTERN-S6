@@ -17,3 +17,9 @@ Content-Type: application/json
   "code": "WLT-TEST001",
   "currency": "XOF"
 }
+
+
+###
+
+GET {{walletHost}}/api/wallets?page=0&size=10
+Content-Type: application/json

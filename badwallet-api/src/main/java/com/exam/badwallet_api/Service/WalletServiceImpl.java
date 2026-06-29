@@ -2,16 +2,21 @@ package com.exam.badwallet_api.Service;
 
 
 import com.exam.badwallet_api.DTO.CreateWalletRequest;
+import com.exam.badwallet_api.DTO.WalletResponse;
 import com.exam.badwallet_api.Data.Wallet;
 import com.exam.badwallet_api.Data.WalletTransaction;
 import com.exam.badwallet_api.Repository.WalletRepository;
 import com.exam.badwallet_api.Repository.WalletTransactionRepository;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Service
 @RequiredArgsConstructor
@@ -75,5 +80,20 @@ public Wallet createWallet(CreateWalletRequest request) {
             .build();
 
     return walletRepository.save(wallet);
+}
+@Override
+public Page<WalletResponse> getAllWallets(int page, int size) {
+
+    Pageable pageable = PageRequest.of(page, size);
+
+    return walletRepository.findAll(pageable)
+            .map(wallet -> new WalletResponse(
+                    wallet.getId(),
+                    wallet.getPhoneNumber(),
+                    wallet.getEmail(),
+                    wallet.getBalance(),
+                    wallet.getCode(),
+                    wallet.getCurrency()
+            ));
 }
 }
