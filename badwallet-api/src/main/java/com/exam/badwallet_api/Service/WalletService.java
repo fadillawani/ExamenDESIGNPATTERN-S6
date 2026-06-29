@@ -1,6 +1,7 @@
 package com.exam.badwallet_api.Service;
 
 import com.exam.badwallet_api.DTO.CreateWalletRequest;
+import com.exam.badwallet_api.DTO.DepositRequest;
 import com.exam.badwallet_api.DTO.WalletBalanceResponse;
 import com.exam.badwallet_api.DTO.WalletResponse;
 import com.exam.badwallet_api.Data.Wallet;
@@ -13,4 +14,5 @@ public interface WalletService {
      Page<WalletResponse> getAllWallets(int page, int size);
      WalletResponse getWalletByPhoneNumber(String phoneNumber);
      WalletBalanceResponse getWalletBalance(String phoneNumber);
+     WalletResponse deposit(Long walletId, DepositRequest request);
 }

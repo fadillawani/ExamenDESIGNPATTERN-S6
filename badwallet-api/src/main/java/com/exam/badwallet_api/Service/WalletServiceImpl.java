@@ -2,12 +2,16 @@ package com.exam.badwallet_api.Service;
 
 
 import com.exam.badwallet_api.DTO.CreateWalletRequest;
+import com.exam.badwallet_api.DTO.DepositRequest;
 import com.exam.badwallet_api.DTO.WalletBalanceResponse;
 import com.exam.badwallet_api.DTO.WalletResponse;
 import com.exam.badwallet_api.Data.Wallet;
 import com.exam.badwallet_api.Data.WalletTransaction;
+import com.exam.badwallet_api.Factory.DepositStrategyFactory;
 import com.exam.badwallet_api.Repository.WalletRepository;
 import com.exam.badwallet_api.Repository.WalletTransactionRepository;
+import com.exam.badwallet_api.Strategy.DepositStrategy;
+
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +29,7 @@ public class WalletServiceImpl implements WalletService {
 
     private final WalletRepository walletRepository;
     private final WalletTransactionRepository transactionRepository;
+    private final DepositStrategyFactory depositStrategyFactory;
 
     @Async
     @Override
@@ -121,6 +126,38 @@ public class WalletServiceImpl implements WalletService {
                 wallet.getPhoneNumber(),
                 wallet.getBalance(),
                 wallet.getCurrency()
+        );
+    }
+    @Override
+    public WalletResponse deposit(Long walletId, DepositRequest request) {
+        DepositStrategy strategy = depositStrategyFactory.getStrategy(request.paymentMethod());
+
+        strategy.validate(request.amount());
+
+        Wallet wallet = walletRepository.findById(walletId)
+                .orElseThrow(() -> new RuntimeException("Portefeuille introuvable"));
+
+        wallet.setBalance(wallet.getBalance().add(request.amount()));
+
+        Wallet savedWallet = walletRepository.save(wallet);
+
+        WalletTransaction transaction = WalletTransaction.builder()
+                .wallet(savedWallet)
+                .type("DEPOSIT_" + request.paymentMethod())
+                .amount(request.amount())
+                .fees(BigDecimal.ZERO)
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        transactionRepository.save(transaction);
+
+        return new WalletResponse(
+                savedWallet.getId(),
+                savedWallet.getPhoneNumber(),
+                savedWallet.getEmail(),
+                savedWallet.getBalance(),
+                savedWallet.getCode(),
+                savedWallet.getCurrency()
         );
     }
 }

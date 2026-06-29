@@ -2,6 +2,7 @@ package com.exam.badwallet_api.Controller;
 
 
 import com.exam.badwallet_api.DTO.CreateWalletRequest;
+import com.exam.badwallet_api.DTO.DepositRequest;
 import com.exam.badwallet_api.DTO.WalletBalanceResponse;
 import com.exam.badwallet_api.DTO.WalletResponse;
 import com.exam.badwallet_api.Data.Wallet;
@@ -53,5 +54,12 @@ public class WalletController {
             @PathVariable String phoneNumber
     ) {
         return ResponseEntity.ok(walletService.getWalletBalance(phoneNumber));
+    }
+    @PostMapping("/{id}/deposit")
+    public ResponseEntity<WalletResponse> deposit(
+            @PathVariable Long id,
+            @Valid @RequestBody DepositRequest request
+    ) {
+        return ResponseEntity.ok(walletService.deposit(id, request));
     }
 }
