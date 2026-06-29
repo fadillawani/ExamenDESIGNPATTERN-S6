@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+
 import { PageResponse, Wallet } from '../models/wallet.model';
 
 export interface CreateWalletRequest {
@@ -9,6 +10,16 @@ export interface CreateWalletRequest {
   initialBalance: number;
   code: string;
   currency: string;
+}
+
+export interface DepositRequest {
+  amount: number;
+  paymentMethod: string;
+}
+
+export interface WithdrawRequest {
+  phoneNumber: string;
+  amount: number;
 }
 
 @Injectable({
@@ -30,8 +41,23 @@ export class WalletApiService {
   createWallet(payload: CreateWalletRequest): Observable<Wallet> {
     return this.http.post<Wallet>(this.BASE_URL, payload);
   }
+
   getWalletByPhone(phone: string): Observable<Wallet> {
-  const encodedPhone = encodeURIComponent(phone);
-  return this.http.get<Wallet>(`${this.BASE_URL}/${encodedPhone}`);
-}
+    const encodedPhone = encodeURIComponent(phone);
+    return this.http.get<Wallet>(`${this.BASE_URL}/${encodedPhone}`);
+  }
+
+  deposit(walletId: number, payload: DepositRequest): Observable<Wallet> {
+    return this.http.post<Wallet>(
+      `${this.BASE_URL}/${walletId}/deposit`,
+      payload
+    );
+  }
+
+  withdraw(payload: WithdrawRequest): Observable<Wallet> {
+    return this.http.post<Wallet>(
+      `${this.BASE_URL}/withdraw`,
+      payload
+    );
+  }
 }

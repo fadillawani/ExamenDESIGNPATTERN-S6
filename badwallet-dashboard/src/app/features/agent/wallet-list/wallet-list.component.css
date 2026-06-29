@@ -1,5 +1,5 @@
 .page {
-  max-width: 1100px;
+  max-width: 1180px;
   margin: 0 auto;
 }
 
@@ -21,12 +21,43 @@
   color: #64748b;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .badge {
   background: #dcfce7;
   color: #166534;
   padding: 8px 14px;
   border-radius: 999px;
-  font-weight: 600;
+  font-weight: 700;
+}
+
+.create-btn {
+  background: #22c55e;
+  color: #0f172a;
+  padding: 9px 14px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.search-card {
+  margin-bottom: 20px;
+  background: white;
+  padding: 18px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+  display: flex;
+  gap: 12px;
+}
+
+.search-card input {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
 }
 
 .table-card {
@@ -60,6 +91,41 @@ td {
   color: #16a34a;
 }
 
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+button {
+  background: #0f172a;
+  color: white;
+  border: none;
+  padding: 9px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+button:disabled {
+  background: #cbd5e1;
+  cursor: not-allowed;
+}
+
+.deposit-btn {
+  background: #22c55e;
+  color: #0f172a;
+}
+
+.withdraw-btn {
+  background: #ef4444;
+  color: white;
+}
+
+.secondary {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
 .pagination {
   padding: 18px;
   display: flex;
@@ -69,21 +135,8 @@ td {
   border-top: 1px solid #e2e8f0;
 }
 
-button {
-  background: #0f172a;
-  color: white;
-  border: none;
-  padding: 9px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-button:disabled {
-  background: #cbd5e1;
-  cursor: not-allowed;
-}
-
 .info {
+  margin-bottom: 18px;
   background: #eff6ff;
   color: #1d4ed8;
   padding: 14px;
@@ -91,43 +144,52 @@ button:disabled {
 }
 
 .error {
+  margin-top: 12px;
   background: #fee2e2;
   color: #991b1b;
-  padding: 14px;
+  padding: 12px;
   border-radius: 10px;
 }
-.header-actions {
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
   display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: center;
+  z-index: 999;
+  padding: 20px;
 }
 
-.create-btn {
-  background: #22c55e;
-  color: #0f172a;
-  padding: 9px 14px;
-  border-radius: 999px;
-  font-weight: 700;
-}
-
-.search-card {
-  margin-bottom: 20px;
+.modal {
+  width: 100%;
+  max-width: 460px;
   background: white;
-  padding: 18px;
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
-  display: flex;
-  gap: 12px;
+  padding: 26px;
+  border-radius: 18px;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.35);
 }
 
-.search-card input {
-  flex: 1;
-  padding: 12px;
+.modal h3 {
+  margin-top: 0;
+  color: #0f172a;
+}
+
+.modal input {
+  width: 100%;
+  padding: 13px;
   border: 1px solid #cbd5e1;
   border-radius: 10px;
+  margin-top: 12px;
 }
 
-.secondary {
-  background: #e2e8f0;
-  color: #0f172a;
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.modal-actions button {
+  flex: 1;
 }

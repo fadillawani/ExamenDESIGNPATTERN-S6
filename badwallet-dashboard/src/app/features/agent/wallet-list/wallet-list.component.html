@@ -4,36 +4,39 @@
       <h2>Liste des portefeuilles</h2>
       <p>Tableau paginé des portefeuilles BadWallet</p>
     </div>
+
     <div class="header-actions">
-    
-    <a routerLink="/admin/create-wallet" class="create-btn">
-      + Nouveau wallet
-    </a>
-  </div>
-    <span class="badge">{{ totalElements }} portefeuilles</span>
+      <a routerLink="/admin/create-wallet" class="create-btn">
+        + Nouveau wallet
+      </a>
+
+      <span class="badge">{{ totalElements }} portefeuilles</span>
+    </div>
   </div>
 
-  <div *ngIf="loading" class="info">Chargement des portefeuilles...</div>
+  <form class="search-card" [formGroup]="searchForm" (ngSubmit)="searchWallet()">
+    <input
+      type="text"
+      formControlName="phoneNumber"
+      placeholder="Rechercher par téléphone : +221770000003"
+    >
+
+    <button type="submit" [disabled]="loading">
+      Rechercher
+    </button>
+
+    <button type="button" class="secondary" (click)="resetSearch()">
+      Réinitialiser
+    </button>
+  </form>
+
+  <div *ngIf="loading" class="info">
+    Chargement des portefeuilles...
+  </div>
 
   <div *ngIf="errorMessage" class="error">
     {{ errorMessage }}
   </div>
-
-  <form class="search-card" [formGroup]="searchForm" (ngSubmit)="searchWallet()">
-  <input
-    type="text"
-    formControlName="phoneNumber"
-    placeholder="Rechercher par téléphone : +221770000003"
-  >
-
-  <button type="submit" [disabled]="loading">
-    Rechercher
-  </button>
-
-  <button type="button" class="secondary" (click)="resetSearch()">
-    Réinitialiser
-  </button>
-</form>
 
   <div class="table-card" *ngIf="!loading && !errorMessage">
     <table>
@@ -45,6 +48,7 @@
           <th>Email</th>
           <th>Solde</th>
           <th>Devise</th>
+          <th>Actions</th>
         </tr>
       </thead>
 
@@ -56,20 +60,80 @@
           <td>{{ wallet.email }}</td>
           <td class="amount">{{ wallet.balance | xof }}</td>
           <td>{{ wallet.currency }}</td>
+
+          <td class="actions">
+            <button
+              type="button"
+              class="deposit-btn"
+              (click)="openOperation(wallet, 'DEPOSIT')"
+            >
+              Dépôt
+            </button>
+
+            <button
+              type="button"
+              class="withdraw-btn"
+              (click)="openOperation(wallet, 'WITHDRAW')"
+            >
+              Retrait
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>
 
     <div class="pagination">
-      <button (click)="previousPage()" [disabled]="page === 0">
+      <button type="button" (click)="previousPage()" [disabled]="page === 0">
         Précédent
       </button>
 
       <span>Page {{ page + 1 }} / {{ totalPages }}</span>
 
-      <button (click)="nextPage()" [disabled]="page + 1 >= totalPages">
+      <button
+        type="button"
+        (click)="nextPage()"
+        [disabled]="page + 1 >= totalPages"
+      >
         Suivant
       </button>
+    </div>
+  </div>
+
+  <div *ngIf="selectedWallet" class="modal-backdrop">
+    <div class="modal">
+      <h3>
+        {{ operationType === 'DEPOSIT' ? 'Effectuer un dépôt' : 'Effectuer un retrait' }}
+      </h3>
+
+      <p>
+        Wallet :
+        <strong>{{ selectedWallet.phoneNumber | phoneFormat }}</strong>
+      </p>
+
+      <p>
+        Solde actuel :
+        <strong>{{ selectedWallet.balance | xof }}</strong>
+      </p>
+
+      <input
+        type="number"
+        [(ngModel)]="operationAmount"
+        placeholder="Montant"
+      >
+
+      <div *ngIf="operationMessage" class="error">
+        {{ operationMessage }}
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" (click)="confirmOperation()" [disabled]="loading">
+          {{ loading ? 'Traitement...' : 'Confirmer' }}
+        </button>
+
+        <button type="button" class="secondary" (click)="cancelOperation()">
+          Annuler
+        </button>
+      </div>
     </div>
   </div>
 </section>
