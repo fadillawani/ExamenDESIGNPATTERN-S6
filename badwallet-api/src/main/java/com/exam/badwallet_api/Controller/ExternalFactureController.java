@@ -1,0 +1,21 @@
+package com.exam.badwallet_api.Controller;
+
+import com.exam.badwallet_api.Proxy.PaymentServiceProxy;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/external/factures")
+@RequiredArgsConstructor
+public class ExternalFactureController {
+
+    private final PaymentServiceProxy paymentServiceProxy;
+
+    @GetMapping("/{walletCode}/current")
+    public ResponseEntity<Object> getCurrentFactures(
+            @PathVariable String walletCode
+    ) {
+        return ResponseEntity.ok(paymentServiceProxy.getCurrentFactures(walletCode));
+    }
+}

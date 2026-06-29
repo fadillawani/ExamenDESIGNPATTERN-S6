@@ -35,4 +35,9 @@ public class PaymentServiceProxy {
 
         return restTemplate.postForObject(url, request, Object.class);
     }
+
+    public Object getCurrentFactures(String walletCode) {
+    String url = PAYMENT_SERVICE_URL + "/" + walletCode + "/current";
+    return restTemplate.getForObject(url, Object.class);
+}
 }

@@ -86,3 +86,6 @@ GET {{walletHost}}/api/wallets/+221770000003/transactions
 Content-Type: application/json
 
 
+### 2.2 Consulter les factures impayées du mois en cours
+GET {{walletHost}}/api/external/factures/WLT-0000003/current
+Content-Type: application/json
