@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
 import '../../providers/wallet_provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -17,9 +16,13 @@ class _HomeScreenState extends State<HomeScreen> {
   String formatXof(double value) {
     return NumberFormat.currency(
       locale: 'fr_SN',
-      symbol: 'XOF',
+      symbol: 'F CFA',
       decimalDigits: 0,
     ).format(value);
+  }
+
+  bool isIncome(String type) {
+    return type.contains('DEPOSIT') || type.contains('TRANSFER_IN');
   }
 
   @override
@@ -28,8 +31,12 @@ class _HomeScreenState extends State<HomeScreen> {
     final balance = provider.balance;
 
     return Scaffold(
+      backgroundColor: const Color(0xFFF4F6F8),
       appBar: AppBar(
-        title: const Text('BadWallet'),
+        title: const Text(
+          'BadWallet',
+          style: TextStyle(fontWeight: FontWeight.w900),
+        ),
         actions: [
           IconButton(
             onPressed: provider.refresh,
@@ -46,16 +53,31 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
                 color: const Color(0xFF0F172A),
-                borderRadius: BorderRadius.circular(26),
+                borderRadius: BorderRadius.circular(28),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.14),
+                    blurRadius: 22,
+                    offset: const Offset(0, 12),
+                  ),
+                ],
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const Text(
+                    'Mon portefeuille',
+                    style: TextStyle(color: Colors.white70),
+                  ),
+                  const SizedBox(height: 6),
                   Text(
                     provider.phoneNumber ?? '',
-                    style: const TextStyle(color: Colors.white70),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 22),
                   Row(
                     children: [
                       Expanded(
@@ -65,16 +87,14 @@ class _HomeScreenState extends State<HomeScreen> {
                               : formatXof(balance?.balance ?? 0),
                           style: const TextStyle(
                             color: Colors.white,
-                            fontSize: 32,
+                            fontSize: 34,
                             fontWeight: FontWeight.w900,
                           ),
                         ),
                       ),
                       IconButton(
                         onPressed: () {
-                          setState(() {
-                            hideBalance = !hideBalance;
-                          });
+                          setState(() => hideBalance = !hideBalance);
                         },
                         icon: Icon(
                           hideBalance
@@ -88,58 +108,92 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: 22),
+
+            const SizedBox(height: 24),
+
             Row(
               children: [
                 _ActionButton(
-                  icon: Icons.send,
+                  icon: Icons.send_rounded,
                   label: 'Transférer',
                   onTap: () => Navigator.pushNamed(context, '/transfer'),
                 ),
                 _ActionButton(
-                  icon: Icons.receipt_long,
+                  icon: Icons.receipt_long_rounded,
                   label: 'Payer',
                   onTap: () {},
                 ),
                 _ActionButton(
-                  icon: Icons.history,
+                  icon: Icons.history_rounded,
                   label: 'Historique',
                   onTap: () => Navigator.pushNamed(context, '/history'),
                 ),
               ],
             ),
-            const SizedBox(height: 26),
-            const Text(
-              'Dernières transactions',
-              style: TextStyle(fontWeight: FontWeight.w900, fontSize: 20),
-            ),
-            const SizedBox(height: 12),
-            ...provider.transactions.take(5).map((transaction) {
-              final isIncome = transaction.type.contains('DEPOSIT') ||
-                  transaction.type.contains('TRANSFER_IN');
 
-              return Card(
-                child: ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor:
-                        isIncome ? Colors.green.shade100 : Colors.red.shade100,
-                    child: Icon(
-                      isIncome ? Icons.arrow_downward : Icons.arrow_upward,
-                      color: isIncome ? Colors.green : Colors.red,
-                    ),
-                  ),
-                  title: Text(transaction.type),
-                  subtitle: Text(transaction.createdAt),
-                  trailing: Text(
-                    formatXof(transaction.amount),
-                    style: TextStyle(
-                      color: isIncome ? Colors.green : Colors.red,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+            const SizedBox(height: 28),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Dernières transactions',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
                 ),
-              );
-            }),
+                TextButton(
+                  onPressed: () => Navigator.pushNamed(context, '/history'),
+                  child: const Text('Voir tout'),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 10),
+
+            if (provider.transactions.isEmpty)
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(18),
+                ),
+                child: const Text('Aucune transaction disponible.'),
+              )
+            else
+              ...provider.transactions.take(5).map((transaction) {
+                final income = isIncome(transaction.type);
+
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(18),
+                  ),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor:
+                          income ? Colors.green.shade100 : Colors.red.shade100,
+                      child: Icon(
+                        income
+                            ? Icons.arrow_downward_rounded
+                            : Icons.arrow_upward_rounded,
+                        color: income ? Colors.green : Colors.red,
+                      ),
+                    ),
+                    title: Text(
+                      transaction.type,
+                      style: const TextStyle(fontWeight: FontWeight.w700),
+                    ),
+                    subtitle: Text(transaction.createdAt),
+                    trailing: Text(
+                      '${income ? '+' : '-'} ${formatXof(transaction.amount)}',
+                      style: TextStyle(
+                        color: income ? Colors.green : Colors.red,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ),
+                );
+              }),
           ],
         ),
       ),
@@ -163,19 +217,29 @@ class _ActionButton extends StatelessWidget {
     return Expanded(
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(20),
         child: Container(
           margin: const EdgeInsets.only(right: 10),
-          padding: const EdgeInsets.symmetric(vertical: 18),
+          padding: const EdgeInsets.symmetric(vertical: 20),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(18),
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.04),
+                blurRadius: 12,
+                offset: const Offset(0, 6),
+              ),
+            ],
           ),
           child: Column(
             children: [
-              Icon(icon, color: const Color(0xFF22C55E)),
+              Icon(icon, color: const Color(0xFF22C55E), size: 28),
               const SizedBox(height: 8),
-              Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
+              Text(
+                label,
+                style: const TextStyle(fontWeight: FontWeight.w800),
+              ),
             ],
           ),
         ),
