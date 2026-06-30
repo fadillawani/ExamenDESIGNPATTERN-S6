@@ -21,6 +21,26 @@ class WalletApiService {
     return WalletBalance.fromJson(decoded, phone);
   }
 
+  Future<void> payFactures({
+  required String phoneNumber,
+  required String serviceName,
+  required List<String> factureReferences,
+}) async {
+  final response = await http.post(
+    Uri.parse('${ApiConstants.wallets}/pay-factures'),
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode({
+      'phoneNumber': phoneNumber,
+      'serviceName': serviceName,
+      'factureReferences': factureReferences,
+    }),
+  );
+
+  if (response.statusCode != 200) {
+    throw Exception('Paiement impossible : ${response.body}');
+  }
+}
+
   Future<List<WalletTransaction>> getTransactions(String phone) async {
     final encodedPhone = Uri.encodeComponent(phone);
 

@@ -121,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 _ActionButton(
                   icon: Icons.receipt_long_rounded,
                   label: 'Payer',
-                  onTap: () {},
+                  onTap: () => Navigator.pushNamed(context, '/bills'),
                 ),
                 _ActionButton(
                   icon: Icons.history_rounded,

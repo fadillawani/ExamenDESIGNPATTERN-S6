@@ -7,6 +7,7 @@ import 'features/dashboard/home_screen.dart';
 import 'features/transfers/transfer_screen.dart';
 import 'features/history/history_screen.dart';
 import 'providers/wallet_provider.dart';
+import 'features/bills/bills_screen.dart';
 
 void main() {
   runApp(const BadWalletApp());
@@ -36,6 +37,7 @@ class BadWalletApp extends StatelessWidget {
           '/home': (_) => const HomeScreen(),
           '/transfer': (_) => const TransferScreen(),
           '/history': (_) => const HistoryScreen(),
+          '/bills': (_) => const BillsScreen(),
         },
       ),
     );
