@@ -1,17 +1,52 @@
-# badwallet_mobile
+# BadWallet Mobile
 
-A new Flutter project.
+Application mobile Flutter développée dans le cadre de l’examen de Flutter L3 S2 2026.
 
-## Getting Started
+## Description
 
-This project is a starting point for a Flutter application.
+BadWallet Mobile est une application mobile multiplateforme orientée client final.  
+Elle permet à un utilisateur de consulter son portefeuille électronique, son solde, ses transactions, d’effectuer des transferts d’argent et de payer ses factures.
 
-A few resources to get you started if this is your first Flutter project:
+L’application consomme la BadWallet API exposée sur le port `8080`.
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+## Technologies utilisées
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Flutter
+- Dart
+- Provider
+- HTTP
+- Intl
+- Google Fonts
+- Flutter Secure Storage
+
+## Fonctionnalités réalisées
+
+- Authentification simulée par numéro de téléphone
+- Tableau de bord client
+- Affichage du solde
+- Masquage / affichage du solde
+- Affichage des 5 dernières transactions
+- Transfert d’argent
+- Historique complet des transactions
+- Filtres sur les transactions
+- Consultation des factures impayées
+- Filtrage des factures par fournisseur
+- Paiement de factures sélectionnées
+
+## Architecture
+
+Le projet suit une organisation feature-first :
+
+```txt
+lib/
+├── core/
+│   └── constants/
+├── features/
+│   ├── auth/
+│   ├── dashboard/
+│   ├── transfers/
+│   ├── bills/
+│   └── history/
+├── models/
+├── providers/
+└── services/
